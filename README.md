@@ -84,7 +84,8 @@
 </body>
 </html>
 ``` 
-``` java
+#### last.js
+``` javascript
 const OPENAPI_KEY = ""; // OpenAI API 키
 const VISION_API_KEY = ""; // Vision API 키
 let imagestring = ""; // 이미지 데이터를 저장할 변수
