@@ -83,3 +83,55 @@
     </div>
 </body>
 </html>
+``` 
+``` java
+const OPENAPI_KEY = ""; // OpenAI API 키
+const VISION_API_KEY = ""; // Vision API 키
+let imagestring = ""; // 이미지 데이터를 저장할 변수
+
+// 파일 업로드 함수
+function uploadFiles(files) {
+    let file = files[0];
+    let reader = new FileReader();
+    reader.onloadend = processFile;
+    reader.readAsDataURL(file);
+}
+
+// 이미지 분석 함수
+function analyze() {
+    const data = {
+        requests: [{
+            image: { content: imagestring },
+            features: [{ type: "FACE_DETECTION", maxResults: 100 }]
+        }]
+    };
+
+    $.ajax({
+        type: "POST",
+        url: 'https://vision.googleapis.com/v1/images:annotate?key=' + VISION_API_KEY,
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+        },
+        data: JSON.stringify(data),
+        contentType: "application/json; charset=utf-8"
+    }).done(function (response) {
+        displayResponse(response);
+    }).fail(function (error) {
+        document.getElementById("resultArea").innerHTML = "Error: " + JSON.stringify(error);
+    });
+}
+
+// 결과 표시 함수
+function displayResponse(response) {
+    let resultArea = document.getElementById("resultArea");
+    let faceAnnotations = response.responses[0].faceAnnotations;
+
+    if (faceAnnotations) {
+        let resultText = "얼굴이 감지되었습니다: " + faceAnnotations.length + "명";
+        resultArea.innerHTML = resultText;
+    } else {
+        resultArea.innerHTML = "얼굴이 감지되지 않았습니다.";
+    }
+}
+
